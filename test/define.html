@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset='utf-8'/>
+	<style type="text/css">
+	body {
+		font-family: arial;
+	}
+	</style>
+</head>
+<body>
+
+	<script id='user' type='text/rage-template'>
+		<h1>This is a little demo:</h1>
+
+		Name: <input type='text' rg-model='name'>
+		Age: <input type='text' rg-model='age' rg-on-keydown='changeAge'>
+
+		<h2>
+			This is my name: <a href='#'>{{name}}</a>
+		</h2>
+
+		<h2>
+			I was born in : <a href='#'>{{ 2013 - (parseInt(age) || 0) + " year"}}</a>
+		</h2>
+
+		Those are my friends:<br/>
+
+		<div rg-component='friend' rg-repeat='friends'></div>
+
+		<div rg-repeat='friends'>
+			<input type='text' rg-model='name'>
+			TEST Name: {{name}}<br>
+			TEST age: {{age}}
+		</div>
+
+		<hr/>
+	</script>
+
+	<script id='friend' type='text/rage-template'>
+		Friend Name: <input type='text' rg-model='name'>
+		<div> name: {{name}} </div>
+		<div> age: {{age}} </div>
+		<br>
+	</script>
+
+	<div id='test'><div>
+
+	<script type="text/javascript" src='../lib/jquery.js'></script>
+	<script type="text/javascript" src='../src/intro.js'></script>
+
+	<!--Helpers-->
+	<script type="text/javascript" src='../src/function-enhance.js'></script>
+	<script type="text/javascript" src='../src/dom-helper.js'></script>
+	<script type="text/javascript" src='../src/events.js'></script>
+
+	<!--Data parser-->
+	<script type="text/javascript" src='../src/expression-helper.js'></script>
+	<script type="text/javascript" src='../src/databinder.js'></script>
+	<script type="text/javascript" src='../src/calculator.js'></script>
+	<script type="text/javascript" src='../src/array.js'></script>
+
+	<!--Element parser-->
+	<script type="text/javascript" src='../src/scope-class.js'></script>
+	<script type="text/javascript" src='../src/directives.js'></script>
+	<script type="text/javascript" src='../src/element-parser.js'></script>
+
+	<script type="text/javascript" src='../src/component.js'></script>
+
+	<script type="text/javascript" src='../src/outro.js'></script>
+
+	<script type="text/javascript">
+
+	var $body = $('body')
+
+	var friendTpl = $('#friend').html()
+	var FriendComponent = component({
+		template: friendTpl,
+		defaults: {
+			name: 'No name',
+			age: 10
+		}
+	}, function(scope) {
+	})
+
+	var fr1 = new FriendComponent({
+		name: 'Joe',
+		age: 100
+	})
+
+	var userTpl = $('#user').html()
+	var UserComponent = component({
+		template: userTpl, 
+
+		defaults: {
+			age: 12,
+			friends: [{
+				name: 'King',
+				age: 34
+			}]
+		},
+
+		components: {
+			friend: FriendComponent
+		}
+
+	}, userComponentFactory)
+
+	function userComponentFactory(scope) {
+
+		var UP_KEY = 38
+		var DOWN_KEY = 40
+
+
+		scope.changeAge = function(event) {
+			if (event.keyCode === UP_KEY) {
+				event.preventDefault()
+				scope.age++ 
+			} else if (event.keyCode === DOWN_KEY) {
+				event.preventDefault()
+				if(scope.age <= 0) {
+					scope.age = 0
+					return
+				} else {
+					scope.age--
+				}
+			}
+		}
+
+	}
+
+
+
+
+	var joe = new UserComponent({
+		name: 'Tommao'
+	})
+
+	joe.scope.friends = [{
+		name: 'Kitty',
+		age: 0 
+	}]
+
+	var kruash = new UserComponent({
+		name: 'Kruash',
+		age: 39
+	})
+
+	kruash.scope.friends = [
+		{name: 'Jerry', age: 39},
+	 	{name: 'Tom', age: 33},
+	 	{name: 'Eating', age: 20},
+	 	{name: 'joe', age:34}, 
+	 	{name: 'Harry', age: 90}
+	]
+
+
+	$body.append(joe.view)
+	$body.append(kruash.view)
+
+	</script>
+</body>
+</html>

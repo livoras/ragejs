@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset='utf-8'/>
+</head>
+<body>
+	{{Hello}}, My  {{name}} {{age}}, How are you {{Hello}} {{age}}
+	{{Joke}}
+	<button rg-on-mouseover='warn'> warning </button>
+	<div rg-on-click='say(event, name, "How are you")'>
+		WTF
+	</div>
+	This s what I sing..	
+	This s what I say..	
+
+	<!--This is comment-->
+	But this is not
+	{{age}}
+	<br/>
+	name: <input rg-model='name'/>
+	title: <input rg-model='title'/>
+	<br>
+	Name is: {{name}} <br/>
+	title is: {{title}}
+	<br>
+	<h2>
+		This is the result of {{ 100 + 12 }} : {{name + ' ' + title}} : {{com("This is a Dog: ")}}
+	</h2>
+	<h1> {{com("Dog ")}} </h1>
+	<br>
+	<input rg-model='isShow'>
+	<h2>I am {{isShow == true || isShow == "true" ? "showing" : "hiding"}}
+	<a href='#' rg-show='isShow'>Flash box</a>	
+
+
+	<textarea rg-model='name'></textarea>
+	<script type="text/javascript" src='../src/intro.js'></script>
+	<script type="text/javascript" src='../src/function-enhance.js'></script>
+	<script type="text/javascript" src='../src/dom-helper.js'></script>
+	<script type="text/javascript" src='../src/events.js'></script>
+
+	<script type="text/javascript" src='../src/expression-helper.js'></script>
+	<script type="text/javascript" src='../src/databinder.js'></script>
+	<script type="text/javascript" src='../src/calculator.js'></script>
+
+	<script type="text/javascript" src='../src/scope-class.js'></script>
+	<script type="text/javascript" src='../src/directives.js'></script>
+	<script type="text/javascript" src='../src/element-parser.js'></script>
+
+	<script type="text/javascript" src='../src/outro.js'></script>
+
+	<script type="text/javascript">
+		var scope = new Scope()
+
+		extend(scope, {
+			Hello: 'Good',
+			name: 'Kruash',
+			age: 12,
+			Joke: 'hahahah',
+			title: 'RageJS',
+			username: 'username',
+			isShow: true,
+			content: 'content',
+			say: function(event, name, greeting) {console.log(greeting || 'hello you ', name, event)},
+			warn: function(event) {alert("I am warning you")},
+			com: function(greeting) {
+				var greeting = greeting || 'Hello, '
+				return greeting + scope.name + ' ' + scope.title
+			}
+		})
+
+
+		var str = "<!--主楼--> <div class='main-floor' title='title is :{{title + 1}}- name is: {{name}}' rg-model='Hello'> <div class='comment-avatar' rg-model='Hello' rg-on-click='say(event, name)'> <img alt='reply-avatar' /> </div> <div class='comment-reply'> <span class='comment-time'>2013-12-11 13:20</span> <span class='comment-reply-but'>回复 TGhis is what I wan wan wanttt</span> </div> <span class='comment-userName'>{{username}}</span> <p class='comment-content'>{{content}}</p> </div> <hr /> <!--楼中楼--> <div class='floors-container'> </div> <div class='comment-reply-zone'> <textarea class='comment-reply-text'></textarea> <button class='comment-reply-send floor-button'>Button</button> </div> "
+
+		var frag = parseDom(str)
+		append(doc.body, frag)
+		parseElement(body, scope)
+		
+	</script>
+</body>
+</html>
